@@ -1,0 +1,139 @@
+CREATE VIEW GFM_VW_MEDIDAS AS
+SELECT
+    CONCAT (
+        [medida_NUMERO_NOTA],
+        '-',
+        [medida_NUMERO_INTERNO_PARTE],
+        '-',
+        [medida_NUMERO_MEDIDA]
+    ) AS NOTA_NR,
+    [nota_NOTA] AS NOTA_ZR,
+    [nota_ORDEM] AS ORDEM_ZR,
+    [medida_NUMERO_INTERNO_MEDIDA] AS MEDIDA_NR_INT,
+    [nota_TIPO_NOTA] AS NOTA_TIPO,
+    CONCAT(
+        'Med: ',
+        [medida_TEXTO_BREVE_MEDIDA],
+        ' ',
+        [txt_longo_TELO_TX_LINHA]
+    ) AS DESCRICAO,
+    [medida_DATA_CRIACAO] AS DT_CRIACAO,
+    [medida_CODIGO_USUARIO_CRIACAO] AS CRIADO_POR,
+    CONCAT(
+        [medida_CODIGO_PARCEIRO_RESPONSAVEL],
+        '-',
+        [medida_CODIGO_CENTRO_SAP_LOCALIZACAO]
+    ) AS COD_RESP,
+    [nota_LOCAL_INSTALACAO] AS LOC_INST,
+    [nota_EQUIPAMENTO] AS EQUIP,
+    [medida_CODIGO_CODE_MEDIDA] AS CRIT_SELEC,
+    [medida_CODIGO_LOCALIZACAO] AS LOCALIZACAO,
+    [medida_CODIGO_CATALOGO_MEDIDA] AS PARADA_CAMPANHA,
+    CONCAT (
+        [medida_TEXTO_STATUS_SISTEMA],
+        ' ',
+        [medida_TEXTO_STATUS_USUARIO]
+    ) AS STATUS,
+    [medida_CODIGO_PARCEIRO_RESPONSAVEL] AS CT_DIRECIONADOR,
+    CONCAT (
+        [nota_STATUS_SISTEMA],
+        ' ',
+        [nota_STATUS_USUARIO]
+    ) AS STATUS_ZR,
+    [medida_NUMERO_ORDEM_MANUNTECAO] AS ORDEM,
+    [status_MSUC] AS DT_MSUC,
+    [status_ELIM] AS DT_ELIM,
+    [status_CANC] AS DT_CANC,
+    [status_PH] AS DT_PH,
+    CASE
+        WHEN [medida_CODIGO_CODE_MEDIDA] IS NULL THEN NULL
+        WHEN [medida_CODIGO_CODE_MEDIDA] LIKE '%A%' THEN [status_PH]
+        WHEN [medida_CODIGO_CODE_MEDIDA] LIKE '%B%' THEN DATEADD(DAY, 90, [status_PH])
+        WHEN [medida_CODIGO_CODE_MEDIDA] LIKE '%C%' THEN DATEADD(DAY, 360, [status_PH])
+        WHEN [medida_CODIGO_CODE_MEDIDA] LIKE '%D%' THEN DATEADD(DAY, 720, [status_PH])
+        ELSE 'verificar'
+    END AS DT_VENC,
+    CASE
+        WHEN CHARINDEX(
+            'CANC',
+            CONCAT(
+                [medida_TEXTO_STATUS_SISTEMA],
+                ' ',
+                [medida_TEXTO_STATUS_USUARIO]
+            )
+        ) = 0
+        AND CHARINDEX(
+            'ELIM',
+            CONCAT(
+                [medida_TEXTO_STATUS_SISTEMA],
+                ' ',
+                [medida_TEXTO_STATUS_USUARIO]
+            )
+        ) = 0
+        AND CHARINDEX(
+            'MREL',
+            CONCAT(
+                [medida_TEXTO_STATUS_SISTEMA],
+                ' ',
+                [medida_TEXTO_STATUS_USUARIO]
+            )
+        ) = 0
+        AND CHARINDEX(
+            'MSUC',
+            CONCAT(
+                [medida_TEXTO_STATUS_SISTEMA],
+                ' ',
+                [medida_TEXTO_STATUS_USUARIO]
+            )
+        ) = 0 THEN 1
+        ELSE 0
+    END AS PEND,
+    CASE
+        WHEN CHARINDEX(
+            'MSUC',
+            CONCAT(
+                [medida_TEXTO_STATUS_SISTEMA],
+                ' ',
+                [medida_TEXTO_STATUS_USUARIO]
+            )
+        ) > 0
+        AND CHARINDEX(
+            'MREL',
+            CONCAT(
+                [medida_TEXTO_STATUS_SISTEMA],
+                ' ',
+                [medida_TEXTO_STATUS_USUARIO]
+            )
+        ) = 0 THEN 1
+        ELSE 0
+    END AS QUIT,
+    CASE
+        WHEN CHARINDEX(
+            'CANC',
+            CONCAT(
+                [medida_TEXTO_STATUS_SISTEMA],
+                ' ',
+                [medida_TEXTO_STATUS_USUARIO]
+            )
+        ) > 0
+        AND CHARINDEX(
+            'ELIM',
+            CONCAT(
+                [medida_TEXTO_STATUS_SISTEMA],
+                ' ',
+                [medida_TEXTO_STATUS_USUARIO]
+            )
+        ) > 0
+        AND CHARINDEX(
+            'MREL',
+            CONCAT(
+                [medida_TEXTO_STATUS_SISTEMA],
+                ' ',
+                [medida_TEXTO_STATUS_USUARIO]
+            )
+        ) > 0 THEN 1
+        ELSE 0
+    END AS CANC,
+    
+FROM
+    [BD_UNBCDIGITAL].[biin].[vw_nota_medida_txt]
