@@ -1,1 +1,0 @@
-[BD_UNBCDIGITAL].[biin].[texto_longo_medida] = VW_BIIN_TEXTO_LONGO_NOTA_MANUTENCAO_MEDIDA
