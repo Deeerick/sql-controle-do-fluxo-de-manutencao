@@ -10,10 +10,10 @@ SELECT
         '-',
         [medida_NUMERO_MEDIDA]
     ) AS NOTA_NR,
-    [nota_NOTA] AS NOTA_ZR,
-    [nota_ORDEM] AS ORDEM_ZR,
-    [medida_NUMERO_INTERNO_MEDIDA] AS MEDIDA_NR_INT,
-    [nota_TIPO_NOTA] AS NOTA_TIPO,
+    nota_NOTA AS NOTA_ZR,
+    nota_ORDEM AS ORDEM_ZR,
+    medida_NUMERO_INTERNO_MEDIDA AS MEDIDA_NR_INT,
+    nota_TIPO_NOTA AS NOTA_TIPO,
     CONCAT(
         'Med: ',
         [medida_TEXTO_BREVE_MEDIDA],
