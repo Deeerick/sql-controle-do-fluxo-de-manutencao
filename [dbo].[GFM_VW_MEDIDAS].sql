@@ -1,3 +1,6 @@
+USE [BD_UNBCDIGITAL]
+GO
+
 CREATE VIEW GFM_VW_MEDIDAS AS
 SELECT
     CONCAT (
@@ -134,6 +137,11 @@ SELECT
         ) > 0 THEN 1
         ELSE 0
     END AS CANC,
-    
+    CASE
+        WHEN [status_MSUC] IS NOT NULL THEN [status_MSUC]
+        WHEN [status_CANC] IS NOT NULL THEN [status_CANC]
+        WHEN [status_ELIM] IS NOT NULL THEN [status_ELIM]
+        ELSE NULL
+    END AS DT_ENCERRAMENTO
 FROM
-    [BD_UNBCDIGITAL].[biin].[vw_nota_medida_txt]
+    [BD_UNBCDIGITAL].[dbo].[GFM_VW_NOTA_MEDIDA_TXT]
