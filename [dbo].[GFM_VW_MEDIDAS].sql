@@ -70,84 +70,21 @@ SELECT
         ELSE 'verificar'
     END AS DT_VENC,
     CASE
-        WHEN CHARINDEX(
-            'CANC',
-            CONCAT(
-                [medida_TEXTO_STATUS_SISTEMA],
-                ' ',
-                [medida_TEXTO_STATUS_USUARIO]
-            )
-        ) = 0
-        AND CHARINDEX(
-            'ELIM',
-            CONCAT(
-                [medida_TEXTO_STATUS_SISTEMA],
-                ' ',
-                [medida_TEXTO_STATUS_USUARIO]
-            )
-        ) = 0
-        AND CHARINDEX(
-            'MREL',
-            CONCAT(
-                [medida_TEXTO_STATUS_SISTEMA],
-                ' ',
-                [medida_TEXTO_STATUS_USUARIO]
-            )
-        ) = 0
-        AND CHARINDEX(
-            'MSUC',
-            CONCAT(
-                [medida_TEXTO_STATUS_SISTEMA],
-                ' ',
-                [medida_TEXTO_STATUS_USUARIO]
-            )
-        ) = 0 THEN 1
+        WHEN CHARINDEX('CANC', medida_TEXTO_STATUS_SISTEMA + ' ' + medida_TEXTO_STATUS_USUARIO) = 0
+        AND CHARINDEX('ELIM', medida_TEXTO_STATUS_SISTEMA + ' ' + medida_TEXTO_STATUS_USUARIO) = 0
+        AND CHARINDEX('MREL', medida_TEXTO_STATUS_SISTEMA + ' ' + medida_TEXTO_STATUS_USUARIO) = 0
+        AND CHARINDEX('MSUC', medida_TEXTO_STATUS_SISTEMA + ' ' + medida_TEXTO_STATUS_USUARIO) = 0 THEN 1
         ELSE 0
     END AS PEND,
     CASE
-        WHEN CHARINDEX(
-            'MSUC',
-            CONCAT(
-                [medida_TEXTO_STATUS_SISTEMA],
-                ' ',
-                [medida_TEXTO_STATUS_USUARIO]
-            )
-        ) > 0
-        AND CHARINDEX(
-            'MREL',
-            CONCAT(
-                [medida_TEXTO_STATUS_SISTEMA],
-                ' ',
-                [medida_TEXTO_STATUS_USUARIO]
-            )
-        ) = 0 THEN 1
+        WHEN CHARINDEX('MSUC', medida_TEXTO_STATUS_SISTEMA + ' ' + medida_TEXTO_STATUS_USUARIO) > 0
+        AND CHARINDEX('MREL', medida_TEXTO_STATUS_SISTEMA + ' ' + medida_TEXTO_STATUS_USUARIO) = 0 THEN 1
         ELSE 0
     END AS QUIT,
     CASE
-        WHEN CHARINDEX(
-            'CANC',
-            CONCAT(
-                [medida_TEXTO_STATUS_SISTEMA],
-                ' ',
-                [medida_TEXTO_STATUS_USUARIO]
-            )
-        ) > 0
-        AND CHARINDEX(
-            'ELIM',
-            CONCAT(
-                [medida_TEXTO_STATUS_SISTEMA],
-                ' ',
-                [medida_TEXTO_STATUS_USUARIO]
-            )
-        ) > 0
-        AND CHARINDEX(
-            'MREL',
-            CONCAT(
-                [medida_TEXTO_STATUS_SISTEMA],
-                ' ',
-                [medida_TEXTO_STATUS_USUARIO]
-            )
-        ) > 0 THEN 1
+        WHEN CHARINDEX('CANC', medida_TEXTO_STATUS_SISTEMA + ' ' + medida_TEXTO_STATUS_USUARIO) > 0
+        AND CHARINDEX('ELIM', medida_TEXTO_STATUS_SISTEMA + ' ' + medida_TEXTO_STATUS_USUARIO) > 0
+        AND CHARINDEX('MREL', medida_TEXTO_STATUS_SISTEMA + ' ' + medida_TEXTO_STATUS_USUARIO) > 0 THEN 1
         ELSE 0
     END AS CANC,
     CASE
