@@ -163,12 +163,12 @@ SELECT
         ELSE NULL
     END AS CRITICIDADE_CLASSE,
     CASE 
-        WHEN CHARINDEX('GRGI', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Grades piso-RGI Risco grave'
+        WHEN CHARINDEX('GRGI', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Grades piso - RGI Risco grave'
+        WHEN CHARINDEX('GALT', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Grades piso - Risco alto'
+        WHEN CHARINDEX('GMOD', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Grades piso - Risco moderado'
+        WHEN CHARINDEX('GBAI', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Grades piso - Risco baixo'
         WHEN CHARINDEX('PPIA', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Plano pintura - Alta'
-        WHEN CHARINDEX('GALT', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Grades piso-Risco alto'
-        WHEN CHARINDEX('GMOD', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Grades piso-Risco moderado'
         WHEN CHARINDEX('PPIM', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Plano pintura - Média'
-        WHEN CHARINDEX('GBAI', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Grades piso-Risco baixo'
         WHEN CHARINDEX('PPIB', STATUS_SISTEMA + ' ' + STATUS_USUARIO) > 0 THEN 'Plano pintura - Baixa'
         ELSE NULL 
     END AS CRITICIDADE_GRADE_PINTURA,
