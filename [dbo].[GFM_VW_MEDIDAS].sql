@@ -6,7 +6,7 @@ SELECT
     CONCAT (
         [medida_NUMERO_NOTA],
         '-',
-        [medida_NUMERO_INTERNO_PARTE],
+        TRIM([medida_NUMERO_INTERNO_PARTE]),
         '-',
         [medida_NUMERO_MEDIDA]
     ) AS NOTA_NR,
@@ -16,9 +16,9 @@ SELECT
     nota_TIPO_NOTA AS NOTA_TIPO,
     CONCAT(
         'Med: ',
-        [medida_TEXTO_BREVE_MEDIDA],
+        TRIM([medida_TEXTO_BREVE_MEDIDA]),
         ' ',
-        [txt_longo_TELO_TX_LINHA]
+        TRIM([txt_longo_TELO_TX_LINHA])
     ) AS DESCRICAO,
     medida_DATA_CRIACAO AS DT_CRIACAO,
     medida_CODIGO_USUARIO_CRIACAO AS CRIADO_POR,
