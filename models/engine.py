@@ -14,8 +14,14 @@ def conn_oracle():
 
 def conn_sql():
     try:
-        conn_sql = pyodbc.connect(f"DRIVER={{SQL server Native Client 11.0}};SERVER={
-                                  SERVER};DATABASE={HOST_SQL};Truested_Connection={TRUSTED_CONNECTION}")
+        conn_sql = pyodbc.connect(
+            f"DRIVER={{SQL Server Native Client 11.0}};"
+            f"SERVER={SERVER};"
+            f"DATABASE={HOST_SQL};"
+            f"Trusted_Connection={TRUSTED_CONNECTION};"
+            f"UID={USER};"
+            f"PWD={PASSWORD}"
+        )
         return conn_sql
     except pyodbc.DatabaseError as e:
         print(f"Erro ao conectar ao SQL Server: {e}")

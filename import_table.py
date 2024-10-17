@@ -1,36 +1,52 @@
 import cx_Oracle
-from models.config import TABELA_ORIGEM, TABELA_DESTINO, USER, PASSWORD, HOST_ORACLE, HOST_SQL, SERVER, TRUSTED_CONNECTION
+import pyodbc
+from tqdm import tqdm
+from models.config import TABELA_ORIGEM, TABELA_DESTINO
 from models.engine import conn_oracle, conn_sql
 
 
 def main():
-    connection = conn_oracle()
+    con_oracle = conn_oracle()
+    con_sql = conn_sql()
 
-    if connection is None:
-        print(f'Erro ao conectar ao Oracle')
+    if con_oracle is None:
+        print('Erro ao conectar ao Oracle')
+        return
+
+    if con_sql is None:
+        print('Erro ao conectar ao SQL Server')
         return
 
     try:
-        cursor = connection.cursor()
+        oracle_cursor = con_oracle.cursor()
+        sql_cursor = con_sql.cursor()
 
-        # Comando SQL
-        sql_query = f"SELECT COUNT(*) FROM {TABELA_ORIGEM}"
+        # Seleciona todos os dados da tabela Oracle com barra de progresso
+        oracle_cursor.execute(f"SELECT * FROM {TABELA_ORIGEM}")
+        rows = []
+        for row in tqdm(oracle_cursor, desc="Selecionando dados", unit="linha"):
+            rows.append(row)
 
-        # Executa o comando SQL
-        cursor.execute(sql_query)
-        result = cursor.fetchone()
-        formatted_result = f"{result[0]:,}".replace(",", ".")
-        print(f"Total de registro na tabela {
-              TABELA_ORIGEM}: {formatted_result}")
+        # Insere os dados na tabela SQL Server com barra de progresso
+        for row in tqdm(rows, desc="Migrando dados", unit="linha"):
+            placeholders = ', '.join(['?'] * len(row))
+            sql_query = f"INSERT INTO {TABELA_DESTINO} VALUES ({placeholders})"
+            sql_cursor.execute(sql_query, row)
 
-    except cx_Oracle.DatabaseError as e:
-        print(f"Erro ao executar a consulta: {e}")
+        con_sql.commit()
+        print(f"Dados migrados de {TABELA_ORIGEM} para {
+              TABELA_DESTINO} com sucesso.")
+
+    except (cx_Oracle.DatabaseError, pyodbc.DatabaseError) as e:
+        print(f"Erro ao migrar os dados: {e}")
 
     finally:
-        # Fecha o cursor e a conexão
-        print("Fechando cursor e conexão")
-        cursor.close()
-        connection.close()
+        # Fecha os cursores e as conexões
+        print("Fechando cursores e conexões")
+        oracle_cursor.close()
+        con_oracle.close()
+        sql_cursor.close()
+        con_sql.close()
 
 
 if __name__ == '__main__':
